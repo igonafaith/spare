@@ -1,0 +1,58 @@
+<!-- JS -->
+<!-- dark-mode-js.html — Theme toggle with localStorage + system preference fallback
+     Pair with: dark-mode-css.html -->
+<script>
+(function(){
+  var KEY = 'theme';
+  var root = document.documentElement;
+
+  // Apply theme immediately at top of IIFE — FOUC prevention
+  // Even in footer, this runs before next paint frame
+  var _s; try { _s = localStorage.getItem(KEY); } catch(e){}
+  if(_s === 'dark' || (!_s && window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches)){
+    root.setAttribute('data-theme','dark');
+  }
+
+  function getPreferred(){
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch(e){}
+    if(saved === 'dark' || saved === 'light') return saved;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  function apply(theme){
+    if(theme === 'dark') root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
+  }
+
+  function init(){
+    var btn = document.createElement('button');
+    btn.id = 'theme-toggle';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Ganti tema gelap/terang');
+    btn.innerHTML = '<i class="ri-moon-line"></i><i class="ri-sun-line"></i>';
+    btn.addEventListener('click', function(){
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.classList.add('theme-transitioning');
+      apply(next);
+      try { localStorage.setItem(KEY, next); } catch(e){}
+      setTimeout(function(){ root.classList.remove('theme-transitioning'); }, 350);
+    });
+    document.body.appendChild(btn);
+
+    if(window.matchMedia){
+      var mql = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function(e){
+        var saved = null;
+        try { saved = localStorage.getItem(KEY); } catch(err){}
+        if(!saved) apply(e.matches ? 'dark' : 'light');
+      };
+      if(mql.addEventListener) mql.addEventListener('change', onChange);
+      else if(mql.addListener) mql.addListener(onChange);
+    }
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
