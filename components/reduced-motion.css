@@ -1,0 +1,36 @@
+/* ============================================================
+   reduced-motion.css — Honor prefers-reduced-motion (no JS pair)
+   Disables/shortens animations & transitions for users with vestibular sensitivity.
+
+   Place this LAST in your Custom CSS so it overrides component animations.
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.001ms!important;
+    scroll-behavior:auto!important
+  }
+
+  /* Override component-specific animations */
+  .lb-overlay,.lb-overlay img,
+  .cc-banner,
+  .kbd-help,.kbd-help-box,
+  .toc-box,
+  #btt-fancy.show,
+  .fn-popover.show{animation:none!important}
+
+  /* Hover lift effects: keep visible state, no movement */
+  .post-card:hover,
+  #btt-fancy:hover,
+  #theme-toggle:hover,
+  #focus-toggle:hover,
+  .lb-close:hover{transform:none!important}
+
+  /* Smooth scroll → instant */
+  html{scroll-behavior:auto!important}
+
+  /* Body bubble / typing indicators that pulse */
+  .pulse,.shimmer,[class*='pulse'],[class*='shimmer']{animation:none!important}
+}
