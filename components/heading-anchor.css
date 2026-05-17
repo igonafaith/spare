@@ -1,0 +1,15 @@
+/* ============================================================
+   heading-anchor.css — Click-to-copy anchor link on headings
+   Pair with: heading-anchor-js.html
+   ============================================================ */
+
+.post-body h2,.post-body h3,.post-body h4{position:relative;scroll-margin-top:80px}
+.post-body .h-anchor{position:absolute;left:-26px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:none;align-items:center;justify-content:center;color:var(--textLight);text-decoration:none;border-radius:6px;font-size:14px;transition:background .15s,color .15s}
+.post-body h2:hover .h-anchor,.post-body h3:hover .h-anchor,.post-body h4:hover .h-anchor{display:inline-flex}
+.post-body .h-anchor:hover{background:var(--blueLight);color:var(--blue)}
+.post-body .h-anchor.copied{color:var(--blue);background:var(--blueLight)}
+.post-body .h-anchor.copied::after{content:'Tersalin';position:absolute;left:28px;top:50%;transform:translateY(-50%);background:var(--text);color:var(--bg,#fff);font-size:11px;padding:3px 8px;border-radius:4px;white-space:nowrap;font-weight:500}
+
+@media(max-width:768px){
+  .post-body .h-anchor{position:static;display:inline-flex;margin-left:6px;transform:none;opacity:.4}
+}
