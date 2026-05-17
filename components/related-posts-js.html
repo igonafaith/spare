@@ -1,0 +1,106 @@
+<!-- JS -->
+<!-- related-posts-js.html — Fetch related posts by first label using Blogger feed JSON
+     Pair with: related-posts.css
+
+     Inserts a section at end of .post-body on single post pages.
+     Uses Blogger's feed: /feeds/posts/default/-/LABEL?alt=json&max-results=N
+-->
+<script>
+(function(){
+  var MAX = 4;
+
+  var escHtml = (window.__h && window.__h.escHtml) || function(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  };
+  function findThumb(entry){
+    if(entry.media$thumbnail && entry.media$thumbnail.url){
+      return entry.media$thumbnail.url.replace(/\/s\d+(-c)?\//, '/s320-c/');
+    }
+    var c = (entry.content && entry.content.$t) || '';
+    var m = c.match(/<img[^>]+src=['"]([^'"]+)['"]/);
+    return m ? m[1].replace(/\/s\d+(-c)?\//, '/s320-c/') : '';
+  }
+  function findUrl(entry){
+    if(!entry.link) return '';
+    for(var i=0;i<entry.link.length;i++){
+      if(entry.link[i].rel === 'alternate') return entry.link[i].href;
+    }
+    return '';
+  }
+  function fmtDate(iso){
+    try{
+      var d = new Date(iso);
+      return d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'});
+    }catch(e){ return ''; }
+  }
+
+  function init(){
+    if(!document.body.classList.contains('post-page') &&
+       !document.querySelector('.post-single')) return;
+
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+
+    // Find first label of current post
+    var labelEl = document.querySelector('.post-labels a, .post-tags a, .pc-tag, .tag-label');
+    if(!labelEl) return;
+    var label = labelEl.textContent.trim();
+    if(!label) return;
+
+    var currentUrl = window.location.href.split('#')[0].replace(/\/$/, '');
+
+    var section = document.createElement('section');
+    section.className = 'related-section';
+    section.innerHTML = '<h3>Artikel Terkait</h3><div class="related-grid"><div class="related-empty">Memuat…</div></div>';
+    body.appendChild(section);
+    var grid = section.querySelector('.related-grid');
+
+    var url = '/feeds/posts/default/-/' + encodeURIComponent(label) +
+              '?alt=json-in-script&max-results=' + (MAX + 2) +
+              '&callback=__related_cb_' + Date.now();
+    var cbName = url.match(/callback=([^&]+)/)[1];
+    var scriptEl; // forward-declared so callback can remove it after JSONP fires
+    window[cbName] = function(data){
+      try{
+        var entries = (data.feed && data.feed.entry) || [];
+        var html = '';
+        var count = 0;
+        for(var i=0;i<entries.length && count<MAX;i++){
+          var e = entries[i];
+          var u = findUrl(e);
+          if(!u || u.replace(/\/$/,'') === currentUrl) continue;
+          var title = (e.title && e.title.$t) || '';
+          var date = (e.published && e.published.$t) || '';
+          var thumb = findThumb(e);
+          html += '<a class="related-card" href="' + escHtml(u) + '">' +
+                  '<div class="rc-thumb">' +
+                    (thumb ? '<img loading="lazy" alt="" src="' + escHtml(thumb) + '">' : '') +
+                  '</div>' +
+                  '<div class="rc-body">' +
+                    '<div class="rc-title">' + escHtml(title) + '</div>' +
+                    '<div class="rc-date">' + escHtml(fmtDate(date)) + '</div>' +
+                  '</div>' +
+                  '</a>';
+          count++;
+        }
+        grid.innerHTML = count ? html : '<div class="related-empty">Tidak ada artikel terkait.</div>';
+      } catch(err){
+        grid.innerHTML = '<div class="related-empty">Gagal memuat artikel terkait.</div>';
+      }
+      try{ delete window[cbName]; }catch(e){}
+      if(scriptEl && scriptEl.parentNode){ scriptEl.parentNode.removeChild(scriptEl); }
+    };
+
+    scriptEl = document.createElement('script');
+    scriptEl.src = url;
+    scriptEl.async = true;
+    scriptEl.onerror = function(){
+      grid.innerHTML = '<div class="related-empty">Gagal memuat artikel terkait.</div>';
+      if(scriptEl && scriptEl.parentNode){ scriptEl.parentNode.removeChild(scriptEl); }
+    };
+    document.head.appendChild(scriptEl);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
