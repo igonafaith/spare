@@ -1,0 +1,21 @@
+/* ============================================================
+   cookie-consent.css — GDPR-style consent banner
+   Pair with: cookie-consent-js.html
+   ============================================================ */
+
+.cc-banner{position:fixed;left:16px;right:16px;bottom:16px;max-width:520px;margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:0 12px 40px rgba(15,23,42,.12);z-index:9998;display:none;font-family:var(--f-body);animation:ccSlide .3s ease}
+.cc-banner.show{display:block}
+.cc-banner h4{margin:0 0 6px;font-family:var(--f-heading);font-size:15px;font-weight:650;color:var(--text)}
+.cc-banner p{margin:0 0 14px;font-size:13.5px;line-height:1.55;color:var(--textMuted)}
+.cc-banner p a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+.cc-actions{display:flex;gap:8px;flex-wrap:wrap}
+.cc-btn{flex:1;min-width:120px;height:38px;border-radius:8px;font-family:var(--f-body);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:background .15s,border-color .15s}
+.cc-btn:hover{background:var(--surfaceHover)}
+.cc-btn.cc-accept{background:var(--blue);border-color:var(--blue);color:#fff}
+.cc-btn.cc-accept:hover{background:var(--blueDark);border-color:var(--blueDark)}
+
+@keyframes ccSlide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+@media(max-width:540px){
+  .cc-banner{left:12px;right:12px;bottom:12px;padding:14px 16px}
+}
