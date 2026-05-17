@@ -1,0 +1,85 @@
+<!-- JS -->
+<!-- footnotes-js.html — Inline footnote markers with hover preview + auto list at post bottom
+     Pair with: footnotes.css
+
+     Usage in post body:
+       <sup data-fn="Catatan kaki teks">1</sup>          (visible number, content from attribute)
+       <sup data-fn>Catatan kaki teks</sup>              (auto-numbered, content from inner text)
+-->
+<script>
+(function(){
+  var escHtml = (window.__h && window.__h.escHtml) || function(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  };
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    var fns = body.querySelectorAll('sup[data-fn]');
+    if(!fns.length) return;
+
+    var pop = document.createElement('div');
+    pop.className = 'fn-popover';
+    pop.setAttribute('role','tooltip');
+    document.body.appendChild(pop);
+
+    var notes = [];
+    fns.forEach(function(sup, i){
+      var n = i + 1;
+      var content = sup.getAttribute('data-fn');
+      if(!content || !content.trim()){
+        // content from inner — use innerHTML and replace marker with [n]
+        content = sup.innerHTML.trim();
+        sup.textContent = n;
+      } else {
+        // marker from inner text (or default to n)
+        if(!sup.textContent.trim()) sup.textContent = n;
+      }
+      var id = 'fn-' + n;
+      var refId = 'fnref-' + n;
+      sup.id = refId;
+      sup.setAttribute('tabindex','0');
+      sup.setAttribute('role','button');
+      sup.setAttribute('aria-describedby','fn-popover');
+
+      function show(e){
+        pop.innerHTML = '<span class="fn-num">' + n + '.</span> ' + escHtml(content);
+        pop.classList.add('show');
+        var rect = sup.getBoundingClientRect();
+        var top = rect.bottom + window.scrollY + 6;
+        var left = rect.left + window.scrollX;
+        var maxLeft = window.scrollX + document.documentElement.clientWidth - pop.offsetWidth - 16;
+        if(left > maxLeft) left = maxLeft;
+        pop.style.top = top + 'px';
+        pop.style.left = Math.max(8, left) + 'px';
+      }
+      function hide(){ pop.classList.remove('show'); }
+
+      sup.addEventListener('mouseenter', show);
+      sup.addEventListener('focus', show);
+      sup.addEventListener('mouseleave', hide);
+      sup.addEventListener('blur', hide);
+      sup.addEventListener('click', function(e){
+        e.preventDefault();
+        var t = document.getElementById(id);
+        if(t) t.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+      notes.push({n:n, id:id, refId:refId, content:content});
+    });
+
+    // Build list at bottom
+    if(!notes.length) return;
+    var section = document.createElement('section');
+    section.className = 'footnotes-list';
+    section.setAttribute('role','doc-endnotes');
+    var html = '<h4>Catatan Kaki</h4><ol>';
+    notes.forEach(function(f){
+      html += '<li id="' + f.id + '">' + escHtml(f.content) + ' <a class="fn-back" href="#' + f.refId + '" aria-label="Kembali">↩</a></li>';
+    });
+    html += '</ol>';
+    section.innerHTML = html;
+    body.appendChild(section);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
