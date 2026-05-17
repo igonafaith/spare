@@ -1,0 +1,105 @@
+/* ============================================================
+   theme-autumn.css — Musim Gugur color theme
+   Replaces the default blue accent with warm amber-terracotta-brown tones.
+
+   Palette concept:
+     Accent (--blue family): burnt sienna / terracotta — #C0542A
+     Light tint (--blueLight): warm amber wash — #FDEBD0
+     Dark accent (--blueDark): deep oak brown — #8C3A1A
+
+   Dark mode counterparts:
+     Accent: muted terracotta on dark bg — #E8845A
+     Light tint: dark amber wash — rgba(200,110,60,.18)
+     Dark accent: pale amber highlight — #F5C49A
+
+   No font or layout changes — drop-in accent swap only.
+   Load AFTER dark-mode.css (or any component that sets --blue).
+   ============================================================ */
+
+/* ── Light mode ── */
+:root{
+  --blue:#C0542A;
+  --blueLight:#FDEBD0;
+  --blueDark:#8C3A1A;
+  --shadow-md:0 4px 16px rgba(192,84,42,.10);
+}
+
+/* ── Dark mode ── */
+:root[data-theme="dark"]{
+  --blue:#E8845A;
+  --blueLight:rgba(200,110,60,.18);
+  --blueDark:#F5C49A;
+}
+
+/* ── Accent-colored elements that use raw hex (not via var) ── */
+
+/* Dark mode badge/tag hover — override dark-mode.css hardcoded rgba values */
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .tag-label,
+:root[data-theme="dark"] .pc-tag,
+:root[data-theme="dark"] .label-cloud a,
+:root[data-theme="dark"] .Label li a,
+:root[data-theme="dark"] .cat-explore-item{
+  background:rgba(232,132,90,.15);
+  border-color:rgba(232,132,90,.25)
+}
+:root[data-theme="dark"] .tag:hover,
+:root[data-theme="dark"] .tag-label:hover,
+:root[data-theme="dark"] .label-cloud a:hover,
+:root[data-theme="dark"] .Label li a:hover{background:rgba(232,132,90,.25)}
+
+/* Dark mode brand mark */
+:root[data-theme="dark"] .brand-mark,
+:root[data-theme="dark"] .avatar{background:linear-gradient(135deg,#E8845A,#C0542A)}
+
+/* Dark mode reading progress bar */
+:root[data-theme="dark"] #read-progress{background:linear-gradient(90deg,#E8845A,#F5C49A)}
+
+/* Dark mode concept badge */
+:root[data-theme="dark"] .concept-badge{background:linear-gradient(90deg,#C0542A,#8C3A1A)}
+
+/* Dark mode search button */
+:root[data-theme="dark"] .search-btn::before{background:linear-gradient(135deg,rgba(232,132,90,.18),rgba(232,132,90,.08))!important}
+
+/* Blockquote border in dark mode */
+:root[data-theme="dark"] blockquote{border-left-color:var(--blue);background:rgba(200,110,60,.06)}
+
+/* Inline code in dark mode — tint follows accent color */
+:root[data-theme="dark"] :not(pre)>code{background:rgba(232,132,90,.12);color:#F5C49A}
+
+/* Text selection highlight in dark mode */
+:root[data-theme="dark"] ::selection{background:rgba(232,132,90,.35);color:#fff}
+
+/* Popular posts counter */
+:root[data-theme="dark"] .PopularPosts li::before{color:#E8845A}
+
+/* ── Dark mode: tag/label text color (dark-mode.css hardcodes #BFDBFE / #DBEAFE) ── */
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .tag-label,
+:root[data-theme="dark"] .pc-tag,
+:root[data-theme="dark"] .label-cloud a,
+:root[data-theme="dark"] .Label li a,
+:root[data-theme="dark"] .cat-explore-item{color:#F5C49A}
+:root[data-theme="dark"] .tag:hover,
+:root[data-theme="dark"] .tag-label:hover,
+:root[data-theme="dark"] .label-cloud a:hover,
+:root[data-theme="dark"] .Label li a:hover{color:#FDEBD0}
+
+/* ── Light mode: hardcoded rgba(37,99,235,…) / #C7D9FF → autumn accent ── */
+.pc-tag{background:linear-gradient(135deg,var(--blueLight),#F0C9A0)}
+.featured-post{background:linear-gradient(135deg,rgba(192,84,42,.07),rgba(140,58,26,.04),rgba(192,84,42,.07));background-size:200% 200%;border-color:rgba(192,84,42,.12)}
+.featured-thumb{background:linear-gradient(135deg,var(--blueLight),rgba(192,84,42,.12))}
+.cat-explore-item:hover em{background:rgba(192,84,42,.12)}
+.post-body mark{background:rgba(192,84,42,.12)}
+.comments .comment-replies{border-image:linear-gradient(to bottom,rgba(192,84,42,.45) 0%,rgba(192,84,42,.25) 50%,rgba(192,84,42,.06) 100%) 1!important}
+.comments .comment-replies li.comment::before{background:linear-gradient(to right,rgba(192,84,42,.4),rgba(192,84,42,.1))}
+
+/* ── Light mode: shadows / glows ── */
+.search-btn:hover{box-shadow:0 6px 18px rgba(192,84,42,.28)}
+.mobile-search:focus-within{box-shadow:0 4px 18px rgba(192,84,42,.12)}
+.site-header.scrolled{box-shadow:0 2px 16px rgba(192,84,42,.10)}
+#btt{box-shadow:0 4px 14px rgba(192,84,42,.35)}
+.rel-card:hover{box-shadow:0 4px 16px rgba(192,84,42,.10)}
+#comment-editor:hover,iframe#comment-editor:hover{box-shadow:0 4px 18px rgba(192,84,42,.12)}
+.page-404 .err-home-btn{box-shadow:0 4px 14px rgba(192,84,42,.25)}
+.page-404 .err-home-btn:hover{box-shadow:0 8px 22px rgba(192,84,42,.32)}
