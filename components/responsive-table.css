@@ -1,0 +1,71 @@
+/* ============================================================
+   responsive-table.css — Cleaner table wrapper with horizontal scroll
+   Pair with: responsive-table-js.html
+   ============================================================ */
+
+.post-body .table-wrap{
+  margin:18px 0;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--surface);
+  position:relative
+}
+.post-body .table-wrap .table-scroll{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin
+}
+.post-body .table-wrap table{
+  display:table!important;
+  margin:0!important;
+  border:none!important;
+  width:100%;
+  min-width:560px;
+  border-collapse:collapse;
+  font-size:14px
+}
+.post-body .table-wrap th,
+.post-body .table-wrap td{
+  padding:10px 14px;
+  text-align:left;
+  border-bottom:1px solid var(--borderLight);
+  white-space:nowrap
+}
+.post-body .table-wrap th{
+  background:var(--surfaceHover);
+  font-family:var(--f-heading);
+  font-weight:650;
+  font-size:12.5px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--textMuted);
+  position:sticky;
+  top:0
+}
+.post-body .table-wrap tbody tr:last-child td{border-bottom:none}
+.post-body .table-wrap tbody tr:hover td{background:var(--surfaceHover)}
+
+/* Scroll fade indicators */
+.post-body .table-wrap::before,
+.post-body .table-wrap::after{
+  content:'';
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:24px;
+  pointer-events:none;
+  z-index:1;
+  opacity:0;
+  transition:opacity .2s
+}
+.post-body .table-wrap::before{
+  left:0;
+  background:linear-gradient(to right,var(--surface),transparent)
+}
+.post-body .table-wrap::after{
+  right:0;
+  background:linear-gradient(to left,var(--surface),transparent)
+}
+.post-body .table-wrap.scroll-left::before{opacity:1}
+.post-body .table-wrap.scroll-right::after{opacity:1}
