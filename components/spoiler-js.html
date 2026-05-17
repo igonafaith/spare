@@ -1,0 +1,35 @@
+<!-- JS -->
+<!-- spoiler-js.html — Click .spoiler elements to reveal hidden text/images
+     Pair with: spoiler.css -->
+<script>
+(function(){
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    body.querySelectorAll('.spoiler').forEach(function(el){
+      el.setAttribute('role','button');
+      el.setAttribute('tabindex','0');
+      el.setAttribute('aria-label','Klik untuk menampilkan');
+
+      // Add hint label after text spoilers (not images)
+      if(el.tagName !== 'IMG'){
+        var nextHint = el.nextElementSibling;
+        if(!nextHint || !nextHint.classList.contains('spoiler-hint')){
+          var hint = document.createElement('span');
+          hint.className = 'spoiler-hint';
+          hint.textContent = '(klik untuk lihat)';
+          el.parentNode.insertBefore(hint, el.nextSibling);
+        }
+      }
+
+      function reveal(){ el.classList.add('revealed'); }
+      el.addEventListener('click', reveal);
+      el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); reveal(); }
+      });
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
