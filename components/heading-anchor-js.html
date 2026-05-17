@@ -1,0 +1,53 @@
+<!-- JS -->
+<!-- heading-anchor-js.html — Adds # link beside h2/h3/h4 in post body, click to copy permalink
+     Pair with: heading-anchor-css.html -->
+<script>
+(function(){
+  // Note: toc-js.html defines an identical slug() — both check h.id first, so they cooperate.
+  // Load this BEFORE toc-js.html so h.id values are assigned before TOC reads them.
+  var slug = (window.__h && window.__h.slug) || function(text){
+    return String(text).toLowerCase().replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'-').substring(0,60);
+  };
+  function copy(text){
+    if(navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText='position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  }
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    var seen = {};
+    body.querySelectorAll('h2, h3, h4').forEach(function(h){
+      if(h.querySelector('.h-anchor')) return;
+      var base = h.id || slug(h.textContent);
+      if(!base) return;
+      var id = base, n = 1;
+      while(seen[id]) id = base + '-' + (++n);
+      seen[id] = true;
+      h.id = id;
+
+      var a = document.createElement('a');
+      a.className = 'h-anchor';
+      a.href = '#' + id;
+      a.setAttribute('aria-label', 'Salin tautan ke bagian ini');
+      a.textContent = '#';
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var url = window.location.origin + window.location.pathname + '#' + id;
+        copy(url).then(function(){
+          a.classList.add('copied');
+          history.replaceState(null, '', '#' + id);
+          setTimeout(function(){ a.classList.remove('copied'); }, 1500);
+        });
+      });
+      h.insertBefore(a, h.firstChild);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
