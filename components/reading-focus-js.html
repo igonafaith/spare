@@ -1,0 +1,32 @@
+<!-- JS -->
+<!-- reading-focus-js.html — Toggle distraction-free reading mode on post pages
+     Pair with: reading-focus-css.html -->
+<script>
+(function(){
+  function init(){
+    var post = document.querySelector('.post-single .post-body');
+    if(!post) return;
+    document.body.classList.add('has-post');
+
+    var btn = document.createElement('button');
+    btn.id = 'focus-toggle';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Mode fokus baca');
+    btn.innerHTML = '<i class="ri-focus-2-line"></i>';
+    btn.addEventListener('click', function(){
+      document.body.classList.toggle('focus-mode');
+      btn.classList.toggle('active');
+    });
+    document.body.appendChild(btn);
+
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && document.body.classList.contains('focus-mode')){
+        document.body.classList.remove('focus-mode');
+        btn.classList.remove('active');
+      }
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
