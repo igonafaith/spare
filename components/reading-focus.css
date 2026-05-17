@@ -1,0 +1,32 @@
+/* ============================================================
+   reading-focus.css — Distraction-free reading mode
+   Pair with: reading-focus-js.html
+   ============================================================ */
+
+#focus-toggle{position:fixed;bottom:24px;right:80px;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.08);font-size:18px;z-index:99;transition:transform .2s,background .2s}
+body.has-post #focus-toggle{display:flex}
+#focus-toggle:hover{transform:scale(1.08);background:var(--surfaceHover)}
+
+body.focus-mode .site-header,
+body.focus-mode .sidebar,
+body.focus-mode .breadcrumb,
+body.focus-mode .featured-meta,
+body.focus-mode .post-meta,
+body.focus-mode .share-bar,
+body.focus-mode .related-posts,
+body.focus-mode #related-posts,
+body.focus-mode .ad-slot,
+body.focus-mode .post-footer-labels,
+body.focus-mode .comments,
+body.focus-mode #comments,
+body.focus-mode .site-footer{opacity:.15;transition:opacity .3s;pointer-events:none}
+
+body.focus-mode .site-header:hover,
+body.focus-mode .sidebar:hover{opacity:1;pointer-events:auto}
+
+body.focus-mode .post-single{max-width:680px;margin-left:auto;margin-right:auto}
+body.focus-mode .post-body{font-size:17px;line-height:1.85}
+
+#focus-toggle.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+@media(max-width:768px){#focus-toggle{bottom:72px;right:64px;width:40px;height:40px}}
