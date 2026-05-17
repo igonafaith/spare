@@ -1,0 +1,17 @@
+/* ============================================================
+   toc.css — Auto Table of Contents
+   Pair with: toc-js.html
+   ============================================================ */
+
+.toc-box{margin:24px 0;padding:18px 22px;border:1px solid var(--border);border-radius:12px;background:var(--surface);font-family:var(--f-body)}
+.toc-box summary{cursor:pointer;font-family:var(--f-heading);font-weight:650;font-size:14px;letter-spacing:.02em;text-transform:uppercase;color:var(--textMuted);list-style:none;display:flex;align-items:center;gap:8px;padding:0}
+.toc-box summary::-webkit-details-marker{display:none}
+.toc-box summary::before{content:'';width:14px;height:14px;background:var(--blue);mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='currentColor' d='M3 6h18v2H3zM3 11h18v2H3zM3 16h12v2H3z'/></svg>") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='currentColor' d='M3 6h18v2H3zM3 11h18v2H3zM3 16h12v2H3z'/></svg>") center/contain no-repeat}
+.toc-box[open] summary{margin-bottom:14px;border-bottom:1px solid var(--borderLight);padding-bottom:12px}
+.toc-box ul{list-style:none;padding:0;margin:0}
+.toc-box li{margin:6px 0;line-height:1.55}
+.toc-box a{color:var(--text);text-decoration:none;font-size:14px;display:inline-block;padding:2px 0;border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
+.toc-box a:hover{color:var(--blue);border-bottom-color:var(--blue)}
+.toc-box .toc-h3{padding-left:18px;font-size:13.5px;color:var(--textMuted)}
+.toc-box .toc-h4{padding-left:36px;font-size:13px;color:var(--textLight)}
+.toc-box a.active{color:var(--blue);font-weight:600}
