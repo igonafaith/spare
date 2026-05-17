@@ -1,0 +1,135 @@
+/* ============================================================
+   dark-mode.css — Color scheme override for [data-theme="dark"]
+   Pair with: dark-mode-js.html
+   ============================================================ */
+
+:root[data-theme="dark"]{
+  --bg:#0F1115;
+  --surface:#161A21;
+  --surfaceHover:#1D222B;
+  --text:#E6E8EB;
+  --textMuted:#A3ABB6;
+  --textLight:#7A828E;
+  --border:#2A313C;
+  --borderLight:#1F242E;
+  --blue:#60A5FA;
+  --blueLight:rgba(96,165,250,.18);
+  --blueDark:#BFDBFE;
+}
+
+:root[data-theme="dark"] body{background:var(--bg);color:var(--text)}
+:root[data-theme="dark"] .site-header{background:rgba(15,17,21,.92);border-color:var(--border)}
+:root[data-theme="dark"] .post-card,
+:root[data-theme="dark"] #sidebar>.widget,
+:root[data-theme="dark"] .side-card,
+:root[data-theme="dark"] .post-single,
+:root[data-theme="dark"] .featured-post{background:var(--surface);border-color:var(--border)}
+
+/* Badges & tags — fix contrast in dark mode
+   Specificity (0,3,0) beats Blogger's .Label li a (0,2,1) without !important */
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .tag-label,
+:root[data-theme="dark"] .pc-tag,
+:root[data-theme="dark"] .label-cloud a,
+:root[data-theme="dark"] .Label li a,
+:root[data-theme="dark"] .cat-explore-item{
+  background:rgba(96,165,250,.15);
+  color:#BFDBFE;
+  border:1px solid rgba(96,165,250,.25)
+}
+:root[data-theme="dark"] .tag:hover,
+:root[data-theme="dark"] .tag-label:hover,
+:root[data-theme="dark"] .label-cloud a:hover,
+:root[data-theme="dark"] .Label li a:hover{background:rgba(96,165,250,.25);color:#DBEAFE}
+
+/* Popular posts counter — fix near-transparent blueLight variable */
+:root[data-theme="dark"] .PopularPosts li::before{color:#60A5FA}
+
+/* Inputs and buttons */
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] input[type="search"],
+:root[data-theme="dark"] textarea{background:var(--surfaceHover);color:var(--text);border-color:var(--border)}
+:root[data-theme="dark"] input::placeholder,
+:root[data-theme="dark"] textarea::placeholder{color:var(--textLight)}
+
+/* Code blocks */
+:root[data-theme="dark"] pre,
+:root[data-theme="dark"] code{background:#0B0E13;color:#D1D5DB;border-color:var(--border)}
+:root[data-theme="dark"] :not(pre)>code{background:rgba(96,165,250,.12);color:#BFDBFE;padding:1px 6px;border-radius:4px}
+
+/* Comments */
+:root[data-theme="dark"] .comment-body{background:var(--surfaceHover);border-color:var(--border);color:var(--text)}
+:root[data-theme="dark"] .comments .comment-replies{filter:saturate(120%)}
+
+/* Images: subtle dim to reduce eye strain (skip spoiler — handled by spoiler.css) */
+:root[data-theme="dark"] .post-body img:not(.spoiler),
+:root[data-theme="dark"] .post-card img:not(.spoiler){filter:brightness(.92)}
+:root[data-theme="dark"] .post-body img.spoiler.revealed{filter:brightness(.92)}
+
+/* Brand mark */
+:root[data-theme="dark"] .brand-mark,
+:root[data-theme="dark"] .avatar{background:linear-gradient(135deg,#60A5FA,#3B82F6);color:#0F1115}
+
+/* Concept badge */
+:root[data-theme="dark"] .concept-badge{background:linear-gradient(90deg,#3B82F6,#1D4ED8);color:#fff}
+
+/* Scrollbar */
+:root[data-theme="dark"] ::-webkit-scrollbar{width:10px;height:10px}
+:root[data-theme="dark"] ::-webkit-scrollbar-track{background:var(--bg)}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:#3A4250}
+
+/* Selection */
+:root[data-theme="dark"] ::selection{background:rgba(96,165,250,.35);color:#fff}
+
+/* Search overlay — increase contrast in dark mode (default color blends into dark bg) */
+:root[data-theme="dark"] .search-overlay{background:rgba(2,5,12,.82)}
+:root[data-theme="dark"] .search-btn{background:var(--surfaceHover)!important;color:var(--text)!important;border:1px solid var(--border)}
+:root[data-theme="dark"] .search-btn::before{background:linear-gradient(135deg,rgba(96,165,250,.18),rgba(96,165,250,.08))!important}
+:root[data-theme="dark"] .search-btn:hover,:root[data-theme="dark"] .search-btn:focus{color:#fff!important}
+:root[data-theme="dark"] .search-btn .search-btn-kbd{background:rgba(255,255,255,.08);color:var(--text);border-color:var(--border)}
+
+/* Mobile search */
+:root[data-theme="dark"] .mobile-search button{background:var(--blue);color:#0F1115}
+:root[data-theme="dark"] .mobile-search button:hover{background:var(--blueDark)}
+
+/* Back-to-top (template default) — keep visible in dark mode */
+:root[data-theme="dark"] #btt{background:var(--surface);color:var(--blue);border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+:root[data-theme="dark"] #btt:hover{background:var(--surfaceHover);color:var(--blueDark)}
+
+/* Reading progress bar */
+:root[data-theme="dark"] #read-progress{background:linear-gradient(90deg,var(--blue),var(--blueDark))}
+
+/* Borders / dividers */
+:root[data-theme="dark"] hr,:root[data-theme="dark"] .divider{background:var(--border);border-color:var(--border)}
+
+/* Blockquote */
+:root[data-theme="dark"] blockquote{border-left-color:var(--blue);background:rgba(96,165,250,.06)}
+
+/* Tables */
+:root[data-theme="dark"] table{border-color:var(--border)}
+:root[data-theme="dark"] th{background:var(--surfaceHover);color:var(--text);border-color:var(--border)}
+:root[data-theme="dark"] td{border-color:var(--border)}
+:root[data-theme="dark"] tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* Smooth transition — only during user-initiated toggle to prevent FOUC slow-fade */
+html.theme-transitioning{transition:background-color .25s ease,color .25s ease}
+html.theme-transitioning body,
+html.theme-transitioning .site-header,
+html.theme-transitioning .post-card,
+html.theme-transitioning #sidebar>.widget,
+html.theme-transitioning .side-card,
+html.theme-transitioning .post-single,
+html.theme-transitioning .featured-post,
+html.theme-transitioning .tag-label,
+html.theme-transitioning .pc-tag{transition:background-color .25s ease,border-color .25s ease,color .25s ease}
+
+/* Toggle button (injected by dark-mode-js.html) */
+#theme-toggle{position:fixed;bottom:80px;right:24px;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.18);font-size:18px;z-index:99;transition:transform .2s,background .2s}
+#theme-toggle:hover{transform:scale(1.08);background:var(--surfaceHover)}
+#theme-toggle .ri-moon-line{display:inline}
+#theme-toggle .ri-sun-line{display:none}
+:root[data-theme="dark"] #theme-toggle .ri-moon-line{display:none}
+:root[data-theme="dark"] #theme-toggle .ri-sun-line{display:inline}
+
+@media(max-width:768px){#theme-toggle{bottom:72px;right:16px;width:40px;height:40px}}
