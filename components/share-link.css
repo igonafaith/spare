@@ -1,0 +1,67 @@
+/* ============================================================
+   share-link.css — Share buttons + copy URL
+   Pair with: share-link-js.html
+   ============================================================ */
+
+.share-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:24px 0;
+  padding:16px 18px;
+  background:var(--surfaceHover);
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-family:var(--f-body)
+}
+.share-bar .share-label{
+  font-size:13px;
+  font-weight:650;
+  color:var(--textMuted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-right:4px
+}
+.share-bar a,
+.share-bar button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--textMuted);
+  cursor:pointer;
+  text-decoration:none;
+  font-size:16px;
+  transition:transform .15s,color .2s,border-color .2s,background .2s
+}
+.share-bar a:hover,
+.share-bar button:hover{
+  color:var(--blue);
+  border-color:var(--blue);
+  transform:translateY(-2px)
+}
+.share-bar .share-copy.copied{
+  color:#10B981;
+  border-color:#10B981
+}
+.share-bar .share-copy.copied::after{
+  content:'Tersalin';
+  position:absolute;
+  bottom:calc(100% + 6px);
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  font-size:11px;
+  font-weight:600;
+  background:#10B981;
+  color:#fff;
+  padding:3px 8px;
+  border-radius:4px;
+  pointer-events:none
+}
+.share-bar .share-copy{position:relative}
