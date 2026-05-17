@@ -1,0 +1,66 @@
+<!-- JS -->
+<!-- lightbox-js.html — Click image in post body to open fullscreen overlay
+     Pair with: lightbox-css.html -->
+<script>
+(function(){
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+
+    var overlay = document.createElement('div');
+    overlay.className = 'lb-overlay';
+    overlay.innerHTML = '<button class="lb-close" type="button" aria-label="Tutup">&times;</button><img alt=""/><div class="lb-caption"></div>';
+    document.body.appendChild(overlay);
+
+    var imgEl = overlay.querySelector('img');
+    var capEl = overlay.querySelector('.lb-caption');
+    var closeBtn = overlay.querySelector('.lb-close');
+
+    function open(src, alt){
+      imgEl.src = src;
+      imgEl.alt = alt || '';
+      capEl.textContent = alt || '';
+      capEl.style.display = alt ? '' : 'none';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function close(){
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      imgEl.src = '';
+    }
+
+    function isImageUrl(url){
+      return /\.(png|jpe?g|gif|webp|avif|svg)(\?|#|$)/i.test(url) ||
+             /blogger\.googleusercontent\.com|bp\.blogspot\.com/i.test(url);
+    }
+
+    // Note: if image-caption-js.html runs before this, images may be inside <figure>.
+    // img.closest('a') still works because image-caption preserves <a> nodes inside <figure>.
+    // Guard: skip images already processed to handle any re-init edge case.
+    body.querySelectorAll('img').forEach(function(img){
+      if(img.classList.contains('no-lightbox')) return;
+      if(img.dataset.lbBound) return;
+      img.dataset.lbBound = '1';
+      var link = img.closest('a');
+      var raw = link ? link.href : img.src;
+      if(link && !isImageUrl(raw)) return;
+      var target = link || img;
+      target.addEventListener('click', function(e){
+        e.preventDefault();
+        var src = raw.replace(/\/s\d+(-c)?\//, '/s1600/').replace(/=s\d+(-c)?$/, '=s1600');
+        open(src, img.alt);
+      });
+    });
+
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function(e){ if(e.target === overlay) close(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
