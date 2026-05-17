@@ -1,0 +1,67 @@
+<!-- JS -->
+<!-- copy-code-js.html — Add copy button to <pre> blocks
+     Pair with: copy-code.css
+
+     Detect language from <pre class="language-xxx"> or <code class="language-xxx">
+-->
+<script>
+(function(){
+  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function detectLang(pre){
+    var code = pre.querySelector('code');
+    var cls = (code && code.className) || pre.className || '';
+    var m = cls.match(/(?:language-|lang-)([\w+-]+)/i);
+    return m ? m[1] : '';
+  }
+
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    // Mark so base template copy button guard knows this component is active
+    body.dataset.ccBound = '1';
+    body.querySelectorAll('pre').forEach(function(pre){
+      if(pre.closest('.code-wrap')) return;
+      // Remove built-in .code-copy from base template to avoid duplicate buttons
+      pre.querySelectorAll(':scope > .code-copy').forEach(function(b){ b.remove(); });
+      var wrap = document.createElement('div');
+      wrap.className = 'code-wrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      var lang = detectLang(pre);
+      if(lang){
+        var lbl = document.createElement('span');
+        lbl.className = 'code-lang';
+        lbl.textContent = lang;
+        wrap.appendChild(lbl);
+      }
+
+      // Copy button only if clipboard API available (HTTPS / modern browser)
+      if(!navigator.clipboard) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'code-copy';
+      btn.setAttribute('aria-label','Salin kode');
+      btn.innerHTML = ICON_COPY + '<span>Salin</span>';
+      btn.addEventListener('click', function(){
+        var text = pre.innerText;
+        navigator.clipboard.writeText(text).then(function(){
+          btn.classList.add('copied');
+          btn.innerHTML = ICON_OK + '<span>Tersalin</span>';
+          setTimeout(function(){
+            btn.classList.remove('copied');
+            btn.innerHTML = ICON_COPY + '<span>Salin</span>';
+          }, 1800);
+        }).catch(function(){
+          btn.innerHTML = ICON_COPY + '<span>Gagal</span>';
+        });
+      });
+      wrap.appendChild(btn);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
