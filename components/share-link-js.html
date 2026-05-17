@@ -1,0 +1,54 @@
+<!-- JS -->
+<!-- share-link-js.html — Inject share bar at end of post body
+     Pair with: share-link.css
+
+     Networks: Twitter/X, Facebook, WhatsApp, Telegram, LinkedIn, Email, Copy URL
+     Uses Web Share API on mobile when available
+-->
+<script>
+(function(){
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    if(body.querySelector('.share-bar')) return;
+
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+
+    var bar = document.createElement('div');
+    bar.className = 'share-bar';
+    bar.innerHTML =
+      '<span class="share-label">Bagikan</span>' +
+      '<a href="https://twitter.com/intent/tweet?url='+url+'&text='+title+'" target="_blank" rel="noopener" aria-label="Twitter/X"><i class="ri-twitter-x-line"></i></a>' +
+      '<a href="https://www.facebook.com/sharer/sharer.php?u='+url+'" target="_blank" rel="noopener" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>' +
+      '<a href="https://wa.me/?text='+title+'%20'+url+'" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="ri-whatsapp-line"></i></a>' +
+      '<a href="https://t.me/share/url?url='+url+'&text='+title+'" target="_blank" rel="noopener" aria-label="Telegram"><i class="ri-telegram-line"></i></a>' +
+      '<a href="https://www.linkedin.com/sharing/share-offsite/?url='+url+'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>' +
+      '<a href="mailto:?subject='+title+'&body='+url+'" aria-label="Email"><i class="ri-mail-line"></i></a>' +
+      '<button type="button" class="share-copy" aria-label="Salin URL"><i class="ri-link"></i></button>';
+
+    body.appendChild(bar);
+
+    var copyBtn = bar.querySelector('.share-copy');
+    copyBtn.addEventListener('click', function(){
+      var raw = decodeURIComponent(url);
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(raw).then(showCopied);
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = raw;
+        document.body.appendChild(ta);
+        ta.select();
+        try{ document.execCommand('copy'); showCopied(); }catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+    function showCopied(){
+      copyBtn.classList.add('copied');
+      setTimeout(function(){ copyBtn.classList.remove('copied'); }, 2000);
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
