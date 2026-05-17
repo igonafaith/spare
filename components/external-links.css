@@ -1,0 +1,18 @@
+/* ============================================================
+   external-links.css — Auto icon for external links in post body
+   Pair with: external-links-js.html
+   ============================================================ */
+
+.post-body a.ext-link::after{
+  content:'';
+  display:inline-block;
+  width:.85em;
+  height:.85em;
+  margin:0 2px 0 4px;
+  vertical-align:-1px;
+  background:currentColor;
+  opacity:.55;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='currentColor' d='M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM5 5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z'/></svg>") center/contain no-repeat;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='currentColor' d='M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zM5 5h6V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6h-2v6H5V5z'/></svg>") center/contain no-repeat
+}
+.post-body a.ext-link:hover::after{opacity:.85}
