@@ -1,0 +1,24 @@
+<!-- JS -->
+<!-- smooth-scroll-js.html — Smooth scroll for in-page anchor links
+     CSS-only alternative: html{scroll-behavior:smooth} (use that if no offset needed). -->
+<script>
+(function(){
+  var OFFSET = 80; // header offset
+  function init(){
+    document.addEventListener('click', function(e){
+      var a = e.target.closest('a[href^="#"]');
+      if(!a) return;
+      var href = a.getAttribute('href');
+      if(!href || href === '#' || href.length < 2) return;
+      var target = document.getElementById(href.slice(1));
+      if(!target) return;
+      e.preventDefault();
+      var top = target.getBoundingClientRect().top + window.pageYOffset - OFFSET;
+      window.scrollTo({top: top, behavior:'smooth'});
+      history.replaceState(null, '', href);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
