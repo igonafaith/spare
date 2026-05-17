@@ -1,0 +1,35 @@
+/* ============================================================
+   print.css — Print-friendly styles (no JS pair)
+   ============================================================ */
+
+@media print{
+  /* Hide chrome */
+  .site-header,.site-footer,.sidebar,#sidebar,#sidebar>.widget,.side-card,.share-bar,
+  .comments,#comments,.related-posts,#related-posts,#btt,#btt-fancy,
+  #read-progress,.skip-link,.ad-slot,#theme-toggle,#focus-toggle,
+  .breadcrumb,#cat-explore-grid,.archive-list,.label-cloud,
+  .featured-meta,.code-copy,.code-lang,.kbd-help,.cc-banner,.lb-overlay{display:none!important}
+
+  /* Reset layout for paper */
+  body{background:#fff!important;color:#000!important;font-size:11pt;line-height:1.5}
+  .post-single,article.post-single,main,#main-content,.main-wrap,.content-area{max-width:100%!important;margin:0!important;padding:0!important;box-shadow:none!important;border:none!important;background:transparent!important}
+
+  /* Typography optimized for print */
+  h1{font-size:22pt;margin:0 0 14pt}
+  h2{font-size:16pt;margin:18pt 0 8pt;page-break-after:avoid}
+  h3{font-size:13pt;margin:14pt 0 6pt;page-break-after:avoid}
+  p,li{orphans:3;widows:3}
+  pre,blockquote,figure,table{page-break-inside:avoid}
+
+  /* Show full URL for links */
+  a[href]:not([href^="#"]):not([href^="javascript"])::after{
+    content:" (" attr(href) ")";font-size:9pt;color:#555;word-break:break-all
+  }
+  a{color:#000!important;text-decoration:underline}
+
+  /* Images: shrink to fit, avoid breaking */
+  img{max-width:100%!important;height:auto!important;page-break-inside:avoid}
+
+  /* Code blocks: bordered for clarity */
+  pre,code{background:#f5f5f5!important;border:1px solid #ccc!important;color:#000!important;font-size:9pt}
+}
