@@ -1,0 +1,56 @@
+<!-- JS -->
+<!-- image-caption-js.html — Normalize Blogger images: auto-create <figure><figcaption> from alt/title
+     Pair with: image-caption.css
+
+     Logic:
+       - If image has class="no-caption" → skip
+       - If image is already inside <figure>/.tr-caption-container → skip
+       - If image has alt OR title → wrap in <figure> with figcaption
+       - If image has class="auto-caption" → force wrap even without alt (uses filename)
+-->
+<script>
+(function(){
+  function basename(src){
+    try{
+      var u = new URL(src, window.location.href);
+      var p = u.pathname.split('/').pop() || '';
+      return decodeURIComponent(p.replace(/\.[a-z0-9]+$/i,'').replace(/[-_]+/g,' ')).trim();
+    }catch(e){ return ''; }
+  }
+
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    body.querySelectorAll('img').forEach(function(img){
+      if(img.classList.contains('no-caption')) return;
+      if(img.closest('figure, .tr-caption-container, .lb-overlay, .lazy-embed')) return;
+
+      var alt = (img.getAttribute('alt') || '').trim();
+      var title = (img.getAttribute('title') || '').trim();
+      var caption = alt || title;
+      if(!caption && img.classList.contains('auto-caption')){
+        caption = basename(img.src);
+      }
+      if(!caption) return;
+
+      var fig = document.createElement('figure');
+      fig.className = 'auto-figure';
+      var cap = document.createElement('figcaption');
+      cap.textContent = caption;
+
+      // If image is wrapped in <a>, keep the link inside figure
+      var wrapper = img.parentElement;
+      if(wrapper && wrapper.tagName === 'A' && wrapper.children.length === 1){
+        wrapper.parentNode.insertBefore(fig, wrapper);
+        fig.appendChild(wrapper);
+      } else {
+        img.parentNode.insertBefore(fig, img);
+        fig.appendChild(img);
+      }
+      fig.appendChild(cap);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
