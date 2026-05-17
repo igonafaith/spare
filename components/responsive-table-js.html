@@ -1,0 +1,33 @@
+<!-- JS -->
+<!-- responsive-table-js.html — Wrap post-body tables for horizontal scroll on mobile
+     Pair with: responsive-table.css -->
+<script>
+(function(){
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    body.querySelectorAll('table').forEach(function(t){
+      if(t.closest('.table-wrap')) return;
+      var wrap = document.createElement('div');
+      wrap.className = 'table-wrap';
+      var scroll = document.createElement('div');
+      scroll.className = 'table-scroll';
+      t.parentNode.insertBefore(wrap, t);
+      scroll.appendChild(t);
+      wrap.appendChild(scroll);
+
+      function update(){
+        var max = scroll.scrollWidth - scroll.clientWidth;
+        if(max <= 1){ wrap.classList.remove('scroll-left','scroll-right'); return; }
+        wrap.classList.toggle('scroll-left', scroll.scrollLeft > 4);
+        wrap.classList.toggle('scroll-right', scroll.scrollLeft < max - 4);
+      }
+      scroll.addEventListener('scroll', update, {passive:true});
+      window.addEventListener('resize', update);
+      update();
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
