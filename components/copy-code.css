@@ -1,0 +1,61 @@
+/* ============================================================
+   copy-code.css — Copy-to-clipboard button on <pre> code blocks
+   Pair with: copy-code-js.html
+   ============================================================ */
+
+.post-body .code-wrap{
+  position:relative;
+  margin:18px 0
+}
+.post-body .code-wrap pre{
+  margin:0!important;
+  padding-top:38px!important;
+  position:relative;
+  overflow-x:auto
+}
+/* Hide base-template built-in copy button (direct child of <pre>) when component is active */
+.post-body .code-wrap pre > .code-copy{display:none!important}
+.post-body .code-wrap .code-lang{
+  position:absolute;
+  top:8px;
+  left:14px;
+  z-index:2;
+  font-family:var(--f-mono,ui-monospace,monospace);
+  font-size:11px;
+  font-weight:600;
+  color:var(--textMuted);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  pointer-events:none
+}
+.post-body .code-wrap .code-copy{
+  position:absolute;
+  top:6px;
+  right:6px;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 10px;
+  font-family:var(--f-body);
+  font-size:12px;
+  font-weight:600;
+  color:var(--textMuted);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:6px;
+  cursor:pointer;
+  opacity:0;
+  transition:opacity .2s,color .2s,border-color .2s,background .2s
+}
+.post-body .code-wrap:hover .code-copy,
+.post-body .code-wrap .code-copy:focus{opacity:1}
+.post-body .code-wrap .code-copy:hover{color:var(--blue);border-color:var(--blue)}
+.post-body .code-wrap .code-copy.copied{color:#10B981;border-color:#10B981}
+.post-body .code-wrap .code-copy svg{width:13px;height:13px}
+
+@media(max-width:600px){
+  .post-body .code-wrap .code-copy{opacity:1}
+}
+
+:root[data-theme="dark"] .post-body .code-wrap .code-copy{background:var(--surfaceHover)}
