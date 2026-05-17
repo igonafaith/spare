@@ -1,0 +1,24 @@
+/* ============================================================
+   reading-time.css — Estimated reading time badge
+   Pair with: reading-time-js.html
+   ============================================================ */
+
+.reading-time{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  font-size:13px;
+  color:var(--textMuted);
+  font-family:var(--f-body)
+}
+.reading-time::before{
+  content:'';
+  width:14px;
+  height:14px;
+  background:currentColor;
+  -webkit-mask:no-repeat center / contain;
+          mask:no-repeat center / contain;
+  -webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polyline points='12 6 12 12 16 14'/></svg>");
+          mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><polyline points='12 6 12 12 16 14'/></svg>");
+  flex-shrink:0
+}
