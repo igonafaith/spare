@@ -1,0 +1,84 @@
+<!-- JS -->
+<!-- lazy-embed-js.html — Defer iframe (YouTube/Vimeo/etc) until clicked. Saves bandwidth + improves Core Web Vitals.
+     Pair with: lazy-embed.css
+
+     Auto-detect:
+       - <iframe data-lazy src="https://...">  → wrapped with placeholder
+       - <iframe src="https://www.youtube.com/embed/...">  → auto-detected (YouTube)
+
+     Manual:
+       <div class="lazy-embed" data-src="https://www.youtube.com/embed/VIDEO_ID"
+            data-thumb="https://i.ytimg.com/vi/VIDEO_ID/hqdefault.jpg" data-label="YouTube">
+       </div>
+-->
+<script>
+(function(){
+  function ytId(url){
+    var m = url.match(/(?:youtube\.com\/(?:embed\/|watch\?v=)|youtu\.be\/)([\w-]{6,})/);
+    return m ? m[1] : null;
+  }
+  function build(opts){
+    var box = document.createElement('div');
+    box.className = 'lazy-embed';
+    if(opts.thumb){
+      var img = document.createElement('img');
+      img.className = 'lazy-thumb';
+      img.loading = 'lazy';
+      img.alt = '';
+      img.src = opts.thumb;
+      box.appendChild(img);
+    }
+    var play = document.createElement('div');
+    play.className = 'lazy-play';
+    box.appendChild(play);
+    if(opts.label){
+      var lbl = document.createElement('div');
+      lbl.className = 'lazy-label';
+      lbl.textContent = opts.label;
+      box.appendChild(lbl);
+    }
+    box.addEventListener('click', function(){
+      var f = document.createElement('iframe');
+      f.src = opts.src + (opts.src.indexOf('?')>-1?'&':'?') + 'autoplay=1';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      f.loading = 'lazy';
+      box.innerHTML = '';
+      box.style.cursor = 'auto';
+      box.appendChild(f);
+    });
+    return box;
+  }
+
+  function init(){
+    var body = document.querySelector('.post-body') || document;
+
+    // Convert <iframe data-lazy> or YouTube iframes
+    body.querySelectorAll('iframe[src]').forEach(function(f){
+      var src = f.getAttribute('src') || '';
+      var hasLazy = f.hasAttribute('data-lazy');
+      var yt = ytId(src);
+      if(!hasLazy && !yt) return;
+      var label = yt ? 'YouTube' : (f.getAttribute('data-label') || 'Embed');
+      var thumb = f.getAttribute('data-thumb') || (yt ? 'https://i.ytimg.com/vi/' + yt + '/hqdefault.jpg' : '');
+      var box = build({src:src, label:label, thumb:thumb});
+      f.parentNode.replaceChild(box, f);
+    });
+
+    // Convert manually-placed <div class="lazy-embed" data-src="..."> 
+    body.querySelectorAll('.lazy-embed[data-src]:not([data-built])').forEach(function(div){
+      div.setAttribute('data-built','');
+      var src = div.getAttribute('data-src');
+      var yt = ytId(src);
+      var box = build({
+        src: src,
+        label: div.getAttribute('data-label') || (yt ? 'YouTube' : 'Embed'),
+        thumb: div.getAttribute('data-thumb') || (yt ? 'https://i.ytimg.com/vi/' + yt + '/hqdefault.jpg' : '')
+      });
+      div.parentNode.replaceChild(box, div);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
