@@ -1,0 +1,15 @@
+/* ============================================================
+   back-to-top.css — Floating "back to top" button with progress ring
+   Pair with: back-to-top-js.html
+   Note: index.xml already provides #btt; this is a fancier override.
+   ============================================================ */
+
+#btt-fancy{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;border:none;background:var(--surface);color:var(--text);cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(15,23,42,.12);z-index:99;transition:transform .2s,opacity .25s}
+#btt-fancy.show{display:flex;animation:bttIn .3s ease}
+#btt-fancy:hover{transform:translateY(-2px) scale(1.05)}
+#btt-fancy svg.btt-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+#btt-fancy svg.btt-ring circle{fill:none;stroke:var(--blue);stroke-width:2;stroke-linecap:round;stroke-dasharray:0 1000;transition:stroke-dasharray .15s linear}
+#btt-fancy i{font-size:18px;color:var(--blue);position:relative;z-index:1}
+
+@keyframes bttIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:768px){#btt-fancy{bottom:16px;right:16px;width:42px;height:42px}}
