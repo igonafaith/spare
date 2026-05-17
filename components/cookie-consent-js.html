@@ -1,0 +1,89 @@
+<!-- JS -->
+<!-- cookie-consent-js.html — Simple consent banner with localStorage persist
+     Pair with: cookie-consent-css.html
+
+     Customize: edit MSG_TITLE, MSG_BODY, PRIVACY_URL below.
+
+     This component dispatches CustomEvents but does NOT load any third-party scripts.
+     You must wire the events yourself to gate analytics, ads, or other tracking.
+
+     Events dispatched on window:
+       'cc:accept'  — user clicked Accept, or already accepted in a prior session
+       'cc:decline' — user clicked Decline, or already declined in a prior session
+
+     Wiring example — Google Analytics (gtag.js):
+       window.addEventListener('cc:accept', function(){
+         var s = document.createElement('script');
+         s.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+         s.async = true;
+         document.head.appendChild(s);
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){ dataLayer.push(arguments); }
+         gtag('js', new Date());
+         gtag('config', 'G-XXXXXXXXXX');
+       });
+
+     Wiring example — Google AdSense:
+       window.addEventListener('cc:accept', function(){
+         var s = document.createElement('script');
+         s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXX';
+         s.async = true; s.crossOrigin = 'anonymous';
+         document.head.appendChild(s);
+       });
+-->
+<script>
+(function(){
+  var KEY = 'cc-choice';
+  var MSG_TITLE = 'Privasi & Cookie';
+  var MSG_BODY = 'Kami menggunakan cookie untuk meningkatkan pengalaman Anda. Dengan melanjutkan, Anda menyetujui kebijakan kami.';
+  var PRIVACY_URL = '/p/privacy.html';
+  var ACCEPT = 'Terima';
+  var DECLINE = 'Tolak';
+
+  function get(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+  function set(v){ try{ localStorage.setItem(KEY, v); }catch(e){} }
+
+  function init(){
+    var existing = get();
+    if(existing === 'accept' || existing === 'decline'){
+      window.dispatchEvent(new CustomEvent('cc:' + existing));
+      return;
+    }
+    var b = document.createElement('div');
+    b.className = 'cc-banner';
+    b.setAttribute('role','dialog');
+    b.setAttribute('aria-label', MSG_TITLE);
+    b.innerHTML =
+      '<h4></h4>' +
+      '<p></p>' +
+      '<div class="cc-actions">' +
+        '<button class="cc-btn cc-decline" type="button"></button>' +
+        '<button class="cc-btn cc-accept" type="button"></button>' +
+      '</div>';
+    b.querySelector('h4').textContent = MSG_TITLE;
+    var p = b.querySelector('p');
+    p.textContent = MSG_BODY + ' ';
+    var link = document.createElement('a');
+    link.href = PRIVACY_URL;
+    link.textContent = 'Kebijakan privasi';
+    p.appendChild(link);
+    b.querySelector('.cc-decline').textContent = DECLINE;
+    b.querySelector('.cc-accept').textContent = ACCEPT;
+
+    document.body.appendChild(b);
+    requestAnimationFrame(function(){ b.classList.add('show'); });
+
+    function choose(val){
+      set(val);
+      b.classList.remove('show');
+      setTimeout(function(){ b.remove(); }, 300);
+      window.dispatchEvent(new CustomEvent('cc:' + val));
+    }
+    b.querySelector('.cc-accept').addEventListener('click', function(){ choose('accept'); });
+    b.querySelector('.cc-decline').addEventListener('click', function(){ choose('decline'); });
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
