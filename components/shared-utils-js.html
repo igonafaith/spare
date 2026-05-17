@@ -1,0 +1,27 @@
+<!-- JS -->
+<!-- shared-utils-js.html — Shared utility functions for component system
+     Load BEFORE other components to enable shared escHtml / slug.
+     Each component falls back to its own local implementation if this file is not loaded,
+     so components remain independently usable without this file.
+
+     Exposes: window.__h.escHtml(s), window.__h.slug(text)
+-->
+<script>
+(function(){
+  var h = window.__h = window.__h || {};
+  /** Escape HTML special characters to prevent XSS in template strings */
+  h.escHtml = h.escHtml || function(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){
+      return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  };
+  /** Generate a URL-safe slug from heading text (max 60 chars) */
+  h.slug = h.slug || function(text){
+    return String(text).toLowerCase()
+      .replace(/[^\w\s-]/g,'')
+      .trim()
+      .replace(/\s+/g,'-')
+      .substring(0,60);
+  };
+})();
+</script>
