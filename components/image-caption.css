@@ -1,0 +1,46 @@
+/* ============================================================
+   image-caption.css — Auto figure/caption from img alt or title
+   Pair with: image-caption-js.html
+
+   Activates on:
+     - <img> with non-empty alt (or title)
+     - <img class="auto-caption">  (force, even if no alt)
+     - <img class="no-caption">    (opt-out)
+   ============================================================ */
+
+.post-body figure.auto-figure{
+  margin:18px 0;
+  text-align:center
+}
+.post-body figure.auto-figure img{
+  display:block;
+  margin:0 auto;
+  border-radius:8px;
+  max-width:100%;
+  height:auto
+}
+.post-body figure.auto-figure figcaption{
+  margin-top:8px;
+  font-size:13px;
+  font-style:italic;
+  color:var(--textMuted);
+  line-height:1.5;
+  font-family:var(--f-body);
+  text-align:center
+}
+
+/* Override Blogger's default tr-caption-container for consistency */
+.post-body .tr-caption-container{
+  display:block;
+  margin:18px auto;
+  text-align:center
+}
+.post-body .tr-caption-container img{margin:0 auto;display:block}
+.post-body .tr-caption{
+  font-size:13px!important;
+  font-style:italic;
+  color:var(--textMuted)!important;
+  margin-top:8px!important;
+  font-family:var(--f-body);
+  background:transparent!important
+}
