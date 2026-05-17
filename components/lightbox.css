@@ -1,0 +1,17 @@
+/* ============================================================
+   lightbox.css — Image zoom overlay
+   Pair with: lightbox-js.html
+   ============================================================ */
+
+.post-body img{cursor:zoom-in;transition:transform .2s}
+.post-body img:hover{transform:translateY(-1px)}
+
+.lb-overlay{position:fixed;inset:0;background:rgba(15,17,21,.92);display:none;align-items:center;justify-content:center;z-index:9999;cursor:zoom-out;animation:lbFade .2s ease}
+.lb-overlay.open{display:flex}
+.lb-overlay img{max-width:92vw;max-height:92vh;object-fit:contain;border-radius:8px;box-shadow:0 16px 60px rgba(0,0,0,.5);animation:lbScale .25s cubic-bezier(.2,.9,.4,1.1)}
+.lb-close{position:absolute;top:20px;right:24px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.lb-close:hover{background:rgba(255,255,255,.22)}
+.lb-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:6px;max-width:80vw;text-align:center}
+
+@keyframes lbFade{from{opacity:0}to{opacity:1}}
+@keyframes lbScale{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
