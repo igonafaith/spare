@@ -1,0 +1,142 @@
+<!-- JS -->
+<!-- news-slider-js.html — Auto-rotating featured slider for homepage
+     Pair with: news-slider.css
+
+     Strategy:
+       1. Look for top N .post-card elements on homepage
+       2. Build slider above the list
+       3. Only activates on homepage (data-view-homepage or .home class)
+
+     Config below.
+-->
+<script>
+(function(){
+  var COUNT = 4;
+  var INTERVAL = 6000;
+
+  function isHome(){
+    var path = window.location.pathname;
+    // Explicit exclusions: post, archive, search, label pages should never trigger slider
+    if(/\/(search|archive|label)\//i.test(path) ||
+       document.body.classList.contains('item-page') ||
+       document.body.classList.contains('archive-page')) return false;
+    return document.body.classList.contains('home') ||
+           /^\/?$/.test(path) ||
+           document.querySelector('.featured-post') !== null;
+  }
+  var escHtml = (window.__h && window.__h.escHtml) || function(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  };
+
+  function init(){
+    if(!isHome()) return;
+
+    // Source posts: first N .post-card in the list
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.post-card')).slice(0, COUNT);
+    if(cards.length < 2) return;
+
+    var anchor = document.querySelector('.featured-post') || cards[0];
+
+    var slides = cards.map(function(c){
+      var link = c.querySelector('a[href]');
+      var img = c.querySelector('img');
+      var imgSrc = img ? img.src.replace(/\/s\d+(-c)?\//,'/s1600/').replace(/=s\d+(-c)?$/,'=s1600') : '';
+      var title = (c.querySelector('.pc-title, h2, h3') || {}).textContent || '';
+      var tag = (c.querySelector('.pc-tag, .tag, .tag-label') || {}).textContent || '';
+      var date = (c.querySelector('.pc-date, time, .post-date') || {}).textContent || '';
+      return {
+        url: link ? link.href : '#',
+        img: imgSrc,
+        title: title.trim(),
+        tag: tag.trim(),
+        date: date.trim()
+      };
+    }).filter(function(s){ return s.title && s.img; });
+
+    if(slides.length < 2) return;
+
+    var slider = document.createElement('section');
+    slider.className = 'ns-slider';
+    slider.setAttribute('aria-roledescription','carousel');
+    var html = '<div class="ns-track">';
+    slides.forEach(function(s){
+      html += '<div class="ns-slide">' +
+                '<img loading="lazy" alt="" src="' + escHtml(s.img) + '">' +
+                '<div class="ns-caption">' +
+                  (s.tag ? '<span class="ns-tag">' + escHtml(s.tag) + '</span>' : '') +
+                  '<h3><a href="' + escHtml(s.url) + '">' + escHtml(s.title) + '</a></h3>' +
+                  (s.date ? '<div class="ns-meta">' + escHtml(s.date) + '</div>' : '') +
+                '</div>' +
+              '</div>';
+    });
+    html += '</div>';
+    html += '<button class="ns-btn ns-prev" type="button" aria-label="Sebelumnya">&#10094;</button>';
+    html += '<button class="ns-btn ns-next" type="button" aria-label="Berikutnya">&#10095;</button>';
+    html += '<div class="ns-dots">';
+    slides.forEach(function(_, i){ html += '<button class="ns-dot' + (i===0?' active':'') + '" type="button" aria-label="Slide ' + (i+1) + '"></button>'; });
+    html += '</div><div class="ns-progress"></div>';
+    slider.innerHTML = html;
+
+    anchor.parentNode.insertBefore(slider, anchor);
+    if(anchor.classList.contains('featured-post')) anchor.style.display = 'none';
+
+    var track = slider.querySelector('.ns-track');
+    var dots = slider.querySelectorAll('.ns-dot');
+    var prog = slider.querySelector('.ns-progress');
+    var idx = 0;
+    var timer = null;
+    var startTs = 0;
+    var rafId = 0;
+
+    function go(n){
+      idx = (n + slides.length) % slides.length;
+      track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+      dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+      restart();
+    }
+    function next(){ go(idx + 1); }
+    function prev(){ go(idx - 1); }
+    function tick(){
+      var elapsed = Date.now() - startTs;
+      var pct = Math.min(100, elapsed / INTERVAL * 100);
+      prog.style.width = pct + '%';
+      if(elapsed >= INTERVAL){ next(); return; }
+      rafId = requestAnimationFrame(tick);
+    }
+    function restart(){
+      cancelAnimationFrame(rafId);
+      startTs = Date.now();
+      prog.style.width = '0%';
+      rafId = requestAnimationFrame(tick);
+    }
+    function pause(){ cancelAnimationFrame(rafId); }
+    function resume(){ restart(); }
+
+    slider.querySelector('.ns-prev').addEventListener('click', prev);
+    slider.querySelector('.ns-next').addEventListener('click', next);
+    dots.forEach(function(d, i){ d.addEventListener('click', function(){ go(i); }); });
+    slider.addEventListener('mouseenter', pause);
+    slider.addEventListener('mouseleave', resume);
+
+    // Touch swipe
+    var sx = 0, dx = 0;
+    track.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; pause(); }, {passive:true});
+    track.addEventListener('touchmove',  function(e){ dx = e.touches[0].clientX - sx; }, {passive:true});
+    track.addEventListener('touchend',   function(){
+      if(Math.abs(dx) > 50){ dx < 0 ? next() : prev(); } else { resume(); }
+      dx = 0;
+    });
+
+    // Pause when offscreen
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){
+        es.forEach(function(e){ e.isIntersecting ? resume() : pause(); });
+      }, {threshold:.2}).observe(slider);
+    }
+
+    restart();
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
