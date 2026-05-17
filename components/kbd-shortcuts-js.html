@@ -1,0 +1,69 @@
+<!-- JS -->
+<!-- kbd-shortcuts-js.html — Press ? to open keyboard shortcuts overlay
+     Pair with: kbd-shortcuts.css
+     Customize: edit SHORTCUTS array below. -->
+<script>
+(function(){
+  // List of shortcuts shown in overlay. Wrap each key in <kbd>.
+  var SHORTCUTS = [
+    {keys:['/'], desc:'Buka pencarian'},
+    {keys:['Esc'], desc:'Tutup overlay'},
+    {keys:['?'], desc:'Buka bantuan ini'},
+    {keys:['g','h'], desc:'Ke beranda'},
+    {keys:['t'], desc:'Kembali ke atas'}
+  ];
+  var TITLE = 'Pintasan Keyboard';
+
+  var escHtml = (window.__h && window.__h.escHtml) || function(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  };
+
+  function init(){
+    var box = document.createElement('div');
+    box.className = 'kbd-help';
+    box.setAttribute('role','dialog');
+    box.setAttribute('aria-label', TITLE);
+    var rows = SHORTCUTS.map(function(s){
+      var keys = s.keys.map(function(k){ return '<kbd>' + escHtml(k) + '</kbd>'; }).join(' ');
+      return '<dt>' + keys + '</dt><dd>' + escHtml(s.desc) + '</dd>';
+    }).join('');
+    box.innerHTML =
+      '<div class="kbd-help-box">' +
+        '<h3>' + escHtml(TITLE) + '<button type="button" aria-label="Tutup">&times;</button></h3>' +
+        '<dl>' + rows + '</dl>' +
+      '</div>';
+    document.body.appendChild(box);
+
+    function open(){ box.classList.add('open'); }
+    function close(){ box.classList.remove('open'); }
+
+    box.querySelector('button').addEventListener('click', close);
+    box.addEventListener('click', function(e){ if(e.target === box) close(); });
+
+    var lastKey = '', lastTime = 0;
+    document.addEventListener('keydown', function(e){
+      if(e.ctrlKey || e.metaKey || e.altKey) return;
+      var tag = (e.target.tagName||'').toLowerCase();
+      if(tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+
+      if(e.key === '?'){ e.preventDefault(); box.classList.contains('open') ? close() : open(); return; }
+      if(e.key === 'Escape' && box.classList.contains('open')){ close(); return; }
+      if(e.key === 't'){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+
+      // Two-key sequence (g h = home)
+      var now = Date.now();
+      if(lastKey === 'g' && now - lastTime < 1000){
+        if(e.key === 'h'){
+          var brand = document.querySelector('a.brand');
+          if(brand) window.location.href = brand.href;
+        }
+        lastKey = ''; return;
+      }
+      if(e.key === 'g'){ lastKey = 'g'; lastTime = now; }
+      else lastKey = '';
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
