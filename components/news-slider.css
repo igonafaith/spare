@@ -1,0 +1,147 @@
+/* ============================================================
+   news-slider.css — Auto-rotating featured posts slider
+   Pair with: news-slider-js.html
+
+   Mounts on existing .featured-post element if found, OR creates
+   own container from .post-card list (top-N).
+
+   No DOM template change needed — JS detects and progressively enhances.
+   ============================================================ */
+
+.ns-slider{
+  position:relative;
+  border-radius:var(--r-xl,16px);
+  overflow:hidden;
+  margin-bottom:clamp(28px,3.5vw,40px);
+  background:var(--surface);
+  border:1px solid var(--border);
+  aspect-ratio:21/9;
+  min-height:280px;
+  max-height:460px
+}
+.ns-track{
+  display:flex;
+  height:100%;
+  transition:transform .55s cubic-bezier(.2,.8,.2,1)
+}
+.ns-slide{
+  flex:0 0 100%;
+  position:relative;
+  height:100%;
+  overflow:hidden
+}
+.ns-slide img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover
+}
+.ns-slide::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.85) 100%)
+}
+.ns-caption{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  z-index:2;
+  padding:clamp(20px,3vw,36px);
+  color:#fff
+}
+.ns-caption .ns-tag{
+  display:inline-block;
+  font-family:var(--f-heading);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--blue);
+  color:#fff;
+  padding:4px 10px;
+  border-radius:4px;
+  margin-bottom:10px
+}
+.ns-caption h3{
+  font-family:var(--f-heading);
+  font-size:clamp(20px,2.6vw,30px);
+  font-weight:700;
+  margin:0 0 8px;
+  line-height:1.25;
+  letter-spacing:-.01em
+}
+.ns-caption h3 a{color:#fff;text-decoration:none}
+.ns-caption h3 a:hover{color:#BFDBFE}
+.ns-caption .ns-meta{
+  font-size:13px;
+  opacity:.85
+}
+
+/* Controls */
+.ns-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:3;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:rgba(255,255,255,.85);
+  border:none;
+  color:#1A1D23;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:20px;
+  opacity:0;
+  transition:opacity .25s,background .2s,transform .2s
+}
+.ns-slider:hover .ns-btn{opacity:1}
+.ns-btn:hover{background:#fff;transform:translateY(-50%) scale(1.06)}
+.ns-prev{left:14px}
+.ns-next{right:14px}
+
+/* Dots */
+.ns-dots{
+  position:absolute;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  display:flex;
+  gap:8px
+}
+.ns-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:rgba(255,255,255,.45);
+  border:none;
+  cursor:pointer;
+  padding:0;
+  transition:background .2s,width .25s
+}
+.ns-dot.active{
+  background:#fff;
+  width:22px;
+  border-radius:4px
+}
+
+/* Progress bar */
+.ns-progress{
+  position:absolute;
+  bottom:0;left:0;
+  z-index:3;
+  height:3px;
+  background:var(--blue);
+  width:0;
+  transition:width .1s linear
+}
+
+@media(max-width:600px){
+  .ns-slider{aspect-ratio:4/3;min-height:240px}
+  .ns-btn{width:34px;height:34px;font-size:18px}
+  .ns-prev{left:8px} .ns-next{right:8px}
+}
