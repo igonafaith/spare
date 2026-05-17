@@ -1,0 +1,26 @@
+<!-- JS -->
+<!-- external-links-js.html — Mark external links in post body with icon + safe rel
+     Pair with: external-links.css
+     index.xml already adds rel/target; this also adds .ext-link class for icon. -->
+<script>
+(function(){
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    var host = window.location.hostname;
+    body.querySelectorAll('a[href]').forEach(function(a){
+      try{
+        var u = new URL(a.href, window.location.href);
+        if(!u.hostname || u.hostname === host) return;
+        a.classList.add('ext-link');
+        if(!a.hasAttribute('target')){
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'nofollow noopener noreferrer');
+        }
+      }catch(e){}
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
