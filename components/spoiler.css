@@ -1,0 +1,39 @@
+/* ============================================================
+   spoiler.css — Blur-reveal text spoiler / NSFW image cover
+   Pair with: spoiler-js.html
+   Usage in post body: <span class="spoiler">teks rahasia</span>
+                       <img class="spoiler" src="...">
+   ============================================================ */
+
+.post-body .spoiler{
+  cursor:pointer;
+  background:var(--text);
+  color:var(--text);
+  border-radius:4px;
+  padding:0 4px;
+  transition:background .25s,color .25s,filter .25s;
+  user-select:none
+}
+.post-body .spoiler.revealed{
+  background:transparent;
+  color:inherit;
+  cursor:auto;
+  user-select:text
+}
+.post-body img.spoiler{
+  filter:blur(20px) saturate(.5);
+  cursor:pointer;
+  transition:filter .35s;
+  display:inline-block
+}
+.post-body img.spoiler.revealed{filter:none;cursor:zoom-in}
+
+.post-body .spoiler-hint{
+  display:inline-block;
+  font-size:.78em;
+  color:var(--blue);
+  margin-left:6px;
+  font-style:italic;
+  user-select:none
+}
+.post-body .spoiler.revealed+.spoiler-hint{display:none}
