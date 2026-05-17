@@ -1,0 +1,42 @@
+<!-- JS -->
+<!-- back-to-top-js.html — Smooth scroll-to-top with circular progress indicator
+     Pair with: back-to-top.css
+     Note: replaces basic #btt from index.xml with a fancier ring version. -->
+<script>
+(function(){
+  function init(){
+    // Hide the basic btt from template if present
+    var basic = document.getElementById('btt');
+    if(basic) basic.style.display = 'none';
+
+    var btn = document.createElement('button');
+    btn.id = 'btt-fancy';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Kembali ke atas');
+    var R = 22, C = 2 * Math.PI * R;
+    btn.innerHTML =
+      '<svg class="btt-ring" viewBox="0 0 48 48"><circle cx="24" cy="24" r="' + R + '"/></svg>' +
+      '<i class="ri-arrow-up-line"></i>';
+    document.body.appendChild(btn);
+
+    var ring = btn.querySelector('circle');
+
+    function update(){
+      var y = window.scrollY || window.pageYOffset;
+      var max = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+      var pct = max > 0 ? Math.min(1, y / max) : 0;
+      btn.classList.toggle('show', y > 300);
+      ring.setAttribute('stroke-dasharray', (C * pct) + ' ' + C);
+    }
+
+    window.addEventListener('scroll', update, {passive:true});
+    update();
+
+    btn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
