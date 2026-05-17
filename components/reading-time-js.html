@@ -1,0 +1,37 @@
+<!-- JS -->
+<!-- reading-time-js.html — Estimate reading time and inject into post meta
+     Pair with: reading-time.css
+
+     Words-per-minute default: 200 (Indonesian/English mixed average)
+     Target: appends <span class="reading-time"> after .post-meta or post date
+-->
+<script>
+(function(){
+  var WPM = 200;
+  function init(){
+    var body = document.querySelector('.post-body');
+    if(!body) return;
+    var text = body.innerText || body.textContent || '';
+    var words = text.trim().split(/\s+/).length;
+    if(words < 30) return;
+    var minutes = Math.max(1, Math.round(words / WPM));
+
+    var span = document.createElement('span');
+    span.className = 'reading-time';
+    span.textContent = minutes + ' menit baca';
+
+    // Try common meta containers
+    var target = document.querySelector('.post-meta, .post-info, .post-single-meta, .post-date');
+    if(target){
+      // Skip if base template already injected reading time
+      if(target.querySelector('.reading-time, [class*="menit"]')) return;
+      target.appendChild(span);
+    } else {
+      // Fallback: prepend before .post-body
+      body.parentNode.insertBefore(span, body);
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
